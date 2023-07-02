@@ -27,3 +27,22 @@ architecture testbench of button_reader_tests is
         );
     end component;
 end architecture;
+
+begin
+    BR : button_reader
+        port map(
+            clock_in        => clock_in;
+            reset_in        => reset_in;
+            enable_in       => enable_in;
+            button_in       => button_in;
+            short_limit_in  => short_limit_in;
+            duration_out    => duration_out;
+            type_out        => type_out;
+            read_enable_out => read_enable_out;
+        );
+
+    clock_process: process
+        begin
+    end process;
+
+end testbench;
