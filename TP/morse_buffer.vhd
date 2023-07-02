@@ -19,6 +19,8 @@ architecture morse_buffer_architecture of morse_buffer is
 
 signal current_buffer, next_buffer : std_logic_vector(10 downto 0);
 signal morse_counter, next_morse_counter : std_logic_vector(4 downto 0);
+signal char_ready : std_logic := '0';
+signal end_of_word : std_logic := '0';
 
 begin
 
@@ -27,29 +29,29 @@ begin
         if (reset_in = '1') then 
             current_buffer <= (others => '0');
             next_buffer <= (others => '0');
-            char_ready_out <= 0;
-            end_of_word_out <= 0;
+            char_ready <= 0;
+            end_of_word <= 0;
         elsif rising_edge(clock_in) then
-            if(char_ready_out = '1') then 
-                char_ready_out <= '0'; 
+            if(char_ready = '1') then 
+                char_ready <= '0'; 
                 current_buffer <= (others => '0');
             end if;
-            if(end_of_word_out = '1') then 
-                end_of_word_out <= '0';
+            if(end_of_word = '1') then 
+                end_of_word <= '0';
             end if;
             if(read_enable_in = '1') then
                 if(morse_in = '10' or morse_in = '11') then
                     current_buffer <= next_buffer;
                     morse_counter <= next_morse_counter;                        
                     if(unsigned(morse_counter) = 5) then
-                        char_ready_out <= '1';
+                        char_ready <= '1';
                         morse_counter = '0';
                     end if;
                 else                    
-                    char_ready_out <= '1';
+                    char_ready <= '1';
                     morse_counter = '0';
                     if(morse_in = '01') then
-                        end_of_word_out <= '1';
+                        end_of_word <= '1';
                     end if;
                 end if;
             end if;
@@ -59,6 +61,8 @@ begin
 next_buffer <= std_logic_vector(shift_left(unsigned(current_buffer), 2) + unsigned(morse_in));
 next_morse_counter <= morse_counter + 1;
 
+char_ready_out <= char_ready;
+end_of_word_out <= end_of_word;
 buffer_out <= current_buffer;
 
 end architecture;
