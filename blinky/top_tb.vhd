@@ -44,7 +44,7 @@ begin
 
     stimulus: process  -- Estímulo
     begin
-        wait for 30 ns + 1ps;
+        wait for 30 ns + 1 ps;
         btn(1) <= '1';
         wait for 100 ns;
         btn(1) <= '0';
