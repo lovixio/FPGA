@@ -8,12 +8,13 @@ use work.digit_counter_pkg.all;
 entity button_reader is
     generic();
     port(
-        clock_in  : in std_logic;
-        reset_in  : in std_logic;
-        enable_in : in std_logic;
-        button_in  : in std_logic;
-        duration_out  : out std_logic_vector(22 downto 0);
-        type_out : out std_logic;
+        clock_in        : in std_logic;
+        reset_in        : in std_logic;
+        enable_in       : in std_logic;
+        button_in       : in std_logic;
+        short_limit_in  : in std_logic_vector(32 downto 0);
+        duration_out    : out std_logic_vector(22 downto 0);
+        type_out        : out std_logic;
         read_enable_out : out std_logic; 
     );
 end entity;
@@ -26,6 +27,8 @@ architecture button_reader_architecture of button_reader is
     signal current_type : std_logic; 
     signal current_duration : std_logic_vector(22 downto 0);
     signal next_duration : std_logic_vector(22 downto 0);
+    signal possible_type :std_logic;
+    signal possible_duration : std_logic_vector(22 downto 0);
     signal read_enable : std_logic;
     
     
@@ -44,13 +47,32 @@ architecture button_reader_architecture of button_reader is
         process(one_decasecond_passed, reset_in)
         begin
             if(reset_in = '1') then
-                current_duration <= 0;                    
-                current_type <= 0;
+                current_duration <= (others => '0');                    
+                current_type <= '0';
             end if;
             if(one_decasecond_passed = '1' and enable_in = '1') then
+
+                if(read_enable = '1' and possible_type = '0') then
+                    next_duration <= (others => '0') + 1;
+                    current_type <= '0';
+                    read_enalbe <= '0';
+                end if;
+
+                if(possible_type = '1') then
+                    if(possible_duration < short_limit_in) then
+                        possible_duration <= possible_duration +1;
+                    elsif(read_enable = '0') then
+                        possible_duration <= possible_duration +1;
+                        read_enable <= '1';
+                    else
+                        next_duration <= possible_duration;
+                        current_type <= '1';
+                        possible_type <= '0';
+                        read_enable <= '0';            
+                    end if;
+                end if;       
                 current_duration <= next_duration;
             end if;
-            read_enable <= 0;
         end process;
         
         --TODO: solo confirmar el cambio del type cuando tenemos 1 short-limit de señal. 
@@ -60,9 +82,18 @@ architecture button_reader_architecture of button_reader is
         process(button_in)
         begin
             if(enable_in = '1') then
-                current_duration <= 0;
-                current_type <= button_in;
-                read_enable <= 1;
+                if(button_in = '1') then
+                    possible_type <= '1';
+                    possible_duration <= (others => '0');
+                else
+                    if(read_enable = '1') then
+                        current_duration <= possible_duration;
+                        current_type <= possible_type
+                    else
+                        read_enable <= '1';
+                    end if;
+                    possible_type <= '0';
+                end if;
             end if;
         end process;
                         
