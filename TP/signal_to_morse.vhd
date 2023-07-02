@@ -1,3 +1,7 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
 entity signal_to_morse is
     generic();
     port(        
@@ -5,7 +9,6 @@ entity signal_to_morse is
         read_enable_in : in std_logic;
         type_in  : in std_logic;
         duration_in  : in std_logic_vector(22 downto 0);
-        read_enable_in : in std_logic;
         short_limit_in : in std_logic_vector();
         long_limit_in : in std_logic_vector();
         morse_out : out std_logic_vector(1 downto 0); 
