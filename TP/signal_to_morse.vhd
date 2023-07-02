@@ -3,54 +3,66 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity signal_to_morse is
-    generic();
     port(        
+        clock_in : in std_logic;
         reset_in  : in std_logic;
         read_enable_in : in std_logic;
         type_in  : in std_logic;
         duration_in  : in std_logic_vector(22 downto 0);
-        short_limit_in : in std_logic_vector();
-        long_limit_in : in std_logic_vector();
+        short_limit_in : in std_logic_vector(5 downto 0);
+        long_limit_in : in std_logic_vector(5 downto 0);
         morse_out : out std_logic_vector(1 downto 0); 
+        morse_ready_out : out std_logic; 
     );
 end entity;
 
 architecture signal_to_morse_architecture of signal_to_morse is
     
-    signal morse : std_logic_vector(1 downto 0);
+    signal morse : std_logic_vector(1 downto 0) := (others => '0');
     signal silence_short_limit : natural := natural(short_limit_in * 3);
-    signal silence_long_limit : natural := natural(long_limit_in * 7);
+    signal silence_long_limit : natural := natural(short_limit_in * 7);
+    signal morse_ready : std_logic := '0'
 
 begin 
 
-    process(read_enable_in)
+    process(clock_in)
     begin 
-        if(read_enable_in = '1') then
-            if (type_in = '1') then
-                if (duration_in > short_limit_in and duration_in < long_limit_in) then
+        if(rising_edge(clock_in)) then
+            if (morse_ready = '1') then
+                morse_ready <= '0';
+            end if;
+            if(read_enable_in = '1') then
+                if (type_in = '1') then
+                    if (duration_in > short_limit_in and duration_in < long_limit_in) then
 
-                    morse <= '10';
+                        morse <= '10';
+                        morse_ready <= '1';
 
-                elsif (duration_in > long_limit_in)
-                
-                    morse <= '11';
-                
-                end if;
-            else
-                if (duration_in > silence_short_limit and duration_in < silence_long_limit) then
+                    elsif (duration_in > long_limit_in)
+                    
+                        morse <= '11';
+                        morse_ready <= '1';
+                    
+                    end if;
+                else
+                    if (duration_in > silence_short_limit and duration_in < silence_long_limit) then
 
-                    morse <= '00';
+                        morse <= '00';
+                        morse_ready <= '1';
 
-                elsif (duration_in > silence_long_limit) then
+                    elsif (duration_in > silence_long_limit) then
 
-                    morse <= '01';
+                        morse <= '01';
+                        morse_ready <= '1';
 
+                    end if;
                 end if;
             end if;
         end if;
     end process;
+    
 
     morse_out <= morse;
-
+    morse_ready_out <= morse_ready;
 
 end architecture;
