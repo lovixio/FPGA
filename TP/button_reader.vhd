@@ -45,23 +45,25 @@ architecture button_reader_architecture of button_reader is
         
         --proceso para ver que tipo de señal es y contarlo.
 
-        --proceso que maneja los cambios de los registros luego de mandar a leer una codigo.
+        --proceso que maneja los cambios de los registros luego de mandar a leer un codigo.
         -- si estamos escribiendo y acabamos de mandar a leer una señal:
         -- si la señal nueva es un silencio, reseteamos en 0 todo
         -- si las señal nueva es un short/long, ponemos lo especulado en current y reseteamos possibles.
         process(clock_in)
         begin
-            if(enable_in = '1' and read_enable = '1') then
-                if(possible_type = '0') then
-                    current_duration <= (others => '0');
-                    current_type <= '0';
-                else
-                    current_duration <= possible_duration;
-                    current_type <= '1';
-                    possible_type <= '0';
-                    possible_duration <= (others => '0');
-                end if; 
-                read_enalbe <= '0'; 
+            if (rising_edge(clock_in)) then
+                if(enable_in = '1' and read_enable = '1') then
+                    if(possible_type = '0') then
+                        current_duration <= (others => '0');
+                        current_type <= '0';
+                    else
+                        current_duration <= possible_duration;
+                        current_type <= '1';
+                        possible_type <= '0';
+                        possible_duration <= (others => '0');
+                    end if; 
+                    read_enalbe <= '0'; 
+                end if;
             end if;
         end process;
 

@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
+use IEEE.math_real.all;
 
 entity signal_to_morse is
     port(        
@@ -12,16 +13,16 @@ entity signal_to_morse is
         short_limit_in : in std_logic_vector(5 downto 0);
         long_limit_in : in std_logic_vector(5 downto 0);
         morse_out : out std_logic_vector(1 downto 0); 
-        morse_ready_out : out std_logic; 
+        morse_ready_out : out std_logic 
     );
 end entity;
 
 architecture signal_to_morse_architecture of signal_to_morse is
     
     signal morse : std_logic_vector(1 downto 0) := (others => '0');
-    signal silence_short_limit : natural := natural(short_limit_in * 3);
-    signal silence_long_limit : natural := natural(short_limit_in * 7);
-    signal morse_ready : std_logic := '0'
+    signal silence_short_limit : unsigned(5 downto 0);  -- tienen que tener un tamaño fijo
+    signal silence_long_limit : unsigned(5 downto 0); -- cuanto? @agus @lovixio
+    signal morse_ready : std_logic := '0';
 
 begin 
 
@@ -33,26 +34,26 @@ begin
             end if;
             if(read_enable_in = '1') then
                 if (type_in = '1') then
-                    if (duration_in > short_limit_in and duration_in < long_limit_in) then
+                    if (unsigned(duration_in) > unsigned(short_limit_in) and unsigned(duration_in) < unsigned(long_limit_in)) then
 
-                        morse <= '10';
+                        morse <= std_logic_vector(to_unsigned(2, 2));
                         morse_ready <= '1';
 
-                    elsif (duration_in > long_limit_in)
+                    elsif (unsigned(duration_in) > unsigned(long_limit_in)) then
                     
-                        morse <= '11';
+                        morse <= std_logic_vector(to_unsigned(3, 2));
                         morse_ready <= '1';
                     
                     end if;
                 else
-                    if (duration_in > silence_short_limit and duration_in < silence_long_limit) then
+                    if (unsigned(duration_in) > unsigned(silence_short_limit) and unsigned(duration_in) < unsigned(silence_long_limit)) then
 
-                        morse <= '00';
+                        morse <= std_logic_vector(to_unsigned(0, 2));
                         morse_ready <= '1';
 
-                    elsif (duration_in > silence_long_limit) then
+                    elsif (unsigned(duration_in) > unsigned(silence_long_limit)) then
 
-                        morse <= '01';
+                        morse <= std_logic_vector(to_unsigned(1, 2));
                         morse_ready <= '1';
 
                     end if;
@@ -61,7 +62,8 @@ begin
         end if;
     end process;
     
-
+    silence_short_limit <= unsigned(short_limit_in)*3;
+    silence_long_limit <= unsigned(short_limit_in)*7;                        
     morse_out <= morse;
     morse_ready_out <= morse_ready;
 

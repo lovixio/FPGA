@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity signal_to_morse_tb is
 end signal_to_morse_tb;
@@ -7,13 +8,13 @@ end signal_to_morse_tb;
 architecture testbench of signal_to_morse_tb is
 
     signal clk : std_logic := '0';     -- Señal de reloj
-    signal reset  :  std_logic := 0;
-    signal read_enable :  std_logic := 0;    
-    signal signal_type  :  std_logic := 0;   -- 0 si es un silencio, 1 si es un bip
-    signal signal_duration  :  std_logic_vector(22 downto 0) := (others => 0); 
-    signal short_limit:  std_logic_vector(5 downto 0) := (others => 0);
-    signal long_limit :  std_logic_vector(5 downto 0) := (others => 0);
-    signal morse_char : out std_logic_vector(1 downto 0) := (others => 0); -- el bit mas significativo indica el tipo, el otro indica si es corto o largo
+    signal reset  :  std_logic := '0';
+    signal read_enable :  std_logic := '0';    
+    signal signal_type  :  std_logic := '0';   -- 0 si es un silencio, 1 si es un bip
+    signal signal_duration  :  std_logic_vector(22 downto 0) := (others => '0'); 
+    signal short_limit : std_logic_vector(5 downto 0) := (others => '0');
+    signal long_limit : std_logic_vector(5 downto 0) := (others => '0');
+    signal morse_char : std_logic_vector(1 downto 0) := (others => '0'); -- el bit mas significativo indica el tipo, el otro indica si es corto o largo
     
 
     component signal_to_morse is
@@ -25,21 +26,21 @@ architecture testbench of signal_to_morse_tb is
             duration_in  : in std_logic_vector(22 downto 0);
             short_limit_in : in std_logic_vector(5 downto 0);
             long_limit_in : in std_logic_vector(5 downto 0);
-            morse_out : out std_logic_vector(1 downto 0); 
+            morse_out : out std_logic_vector(1 downto 0)
         );
     end component;
 
 begin
     UUT: signal_to_morse
         port map (
-            clock_in => clk;
-            reset_in  => reset;
-            read_enable_in => read_enable;
-            type_in => signal_type;
-            duration_in => signal_duration;
-            short_limit_in => shor_limit;
-            long_limit_in =>  long_limit
-            morse_out =>  morse_char;
+            clock_in => clk,
+            reset_in  => reset,
+            read_enable_in => read_enable,
+            type_in => signal_type,
+            duration_in => signal_duration,
+            short_limit_in => short_limit,
+            long_limit_in =>  long_limit,
+            morse_out =>  morse_char
             );
 
     clk_process: process  -- Generador de reloj
@@ -99,7 +100,7 @@ begin
         short_limit <= std_logic_vector(to_unsigned(5, 5));
         long_limit <= std_logic_vector(to_unsigned(15, 5));
         read_enable <= '1';
-        wait 10 ns;
+        wait for 10 ns;
 
         reset <= '1';
         wait;
