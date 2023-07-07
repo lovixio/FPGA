@@ -20,8 +20,8 @@ end entity;
 architecture signal_to_morse_architecture of signal_to_morse is
     
     signal morse : std_logic_vector(1 downto 0) := (others => '0');
-    signal silence_short_limit : unsigned(5 downto 0);  -- tienen que tener un tamaño fijo
-    signal silence_long_limit : unsigned(5 downto 0); -- cuanto? @agus @lovixio
+    signal silence_short_limit : unsigned(5 downto 0) := unsigned(short_limit_in)*3;
+    signal silence_long_limit : unsigned(5 downto 0) := unsigned(short_limit_in)*7;
     signal morse_ready : std_logic := '0';
 
 begin 
@@ -61,9 +61,7 @@ begin
             end if;
         end if;
     end process;
-    
-    silence_short_limit <= unsigned(short_limit_in)*3;
-    silence_long_limit <= unsigned(short_limit_in)*7;                        
+                       
     morse_out <= morse;
     morse_ready_out <= morse_ready;
 

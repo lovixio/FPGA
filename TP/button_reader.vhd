@@ -1,26 +1,25 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
+use IEEE.math_real.all;
 
-library work;
-use work.digit_counter_pkg.all;
 
 entity button_reader is
-    generic();
     port(
         clock_in        : in std_logic;
         reset_in        : in std_logic;
         enable_in       : in std_logic;
         button_in       : in std_logic;
-        short_limit_in  : in std_logic_vector(32 downto 0);
+        short_limit_in  : in std_logic_vector(5 downto 0);
         duration_out    : out std_logic_vector(22 downto 0);
         type_out        : out std_logic;
-        read_enable_out : out std_logic; 
+        read_enable_out : out std_logic
     );
 end entity;
 
 architecture button_reader_architecture of button_reader is
-    constant max_count <=  std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(5000000-1, 23));
+    constant max_count : std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(5000000-1, 23));
+    constant N: natural := 5000000;
     signal one_decasecond_passed : std_logic;
     signal count_o : std_logic_vector(22 downto 0);
 
@@ -34,7 +33,7 @@ architecture button_reader_architecture of button_reader is
     
     begin
         CLOCK_COUNTER:  entity work.mod_m_counter_prog
-        generic map (5000000 => M)
+        generic map (M => N)
         port map (  clk_i       => clock_in,
         reset_i     => reset_in,
         run_i       => enable_in,
@@ -62,7 +61,7 @@ architecture button_reader_architecture of button_reader is
                         possible_type <= '0';
                         possible_duration <= (others => '0');
                     end if; 
-                    read_enalbe <= '0'; 
+                    read_enable <= '0'; 
                 end if;
             end if;
         end process;
@@ -87,11 +86,11 @@ architecture button_reader_architecture of button_reader is
 
                 if(possible_type = '1') then
 
-                    possible_duration <= possible_duration +1;
+                    possible_duration <= std_logic_vector(unsigned(possible_duration) +1);
 
                     if(possible_duration > short_limit_in) then
                         read_enable <= '1';
-                        next_duration <= next_duration - possible_duration;          
+                        next_duration <= std_logic_vector(unsigned(next_duration) - unsigned(possible_duration));          
                     end if;
 
                 end if;       
@@ -122,8 +121,8 @@ architecture button_reader_architecture of button_reader is
         end process;
                         
     -- si current está en su maximo, dejamos next estatico. si no, le sumamos 1.                            
-    next_duration <= current_duration when current_duration = unsigned(max_count) else 
-    current_duration + 1;
+    next_duration <= current_duration when unsigned(current_duration) = unsigned(max_count) else 
+    std_logic_vector(unsigned(current_duration) + 1);
     
     --ponemos el out los current y el read_enable.
     duration_out <= current_duration;
