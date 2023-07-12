@@ -6,15 +6,15 @@ entity button_reader_tb is
 end button_reader_tb;
 
 architecture testbench of button_reader_tb is
-    signal clock        :  std_logic := '0';
-    signal reset        :  std_logic := '0';
-    signal enable       :  std_logic := '1';
-    signal button       :  std_logic := '0';
-    signal short_limit  :  std_logic_vector(5 downto 0) := (others => '0');
-    signal signal_duration    :  std_logic_vector(22 downto 0);
-    signal signal_type       :  std_logic;
-    signal read_enable :  std_logic;
-    signal count_o         : std_logic_vector(3 downto 0);
+    signal clock                :  std_logic := '0';
+    signal reset                :  std_logic := '0';
+    signal enable               :  std_logic := '1';
+    signal button               :  std_logic := '0';
+    signal short_limit          :  std_logic_vector(5 downto 0) := (others => '0');
+    signal signal_duration      :  std_logic_vector(22 downto 0) := (others => '0');
+    signal signal_type          :  std_logic := '0';
+    signal read_enable          :  std_logic := '0';
+    signal count_o              :  std_logic_vector(3 downto 0) := (others => '0');
 
 
     constant standard_short_limit : std_logic_vector(5 downto 0) := std_logic_vector(to_unsigned(3, 6));

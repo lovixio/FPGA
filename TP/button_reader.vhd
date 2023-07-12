@@ -31,13 +31,13 @@ architecture button_reader_architecture of button_reader is
     --signal count_o : std_logic_vector(3 downto 0);
 
 
-    signal one_decasecond_passed : std_logic;
-    signal current_type : std_logic; 
-    signal current_duration : std_logic_vector(22 downto 0);
-    signal next_duration : std_logic_vector(22 downto 0);
-    signal possible_type :std_logic;
-    signal possible_duration : std_logic_vector(22 downto 0);
-    signal read_enable : std_logic;
+    signal one_decasecond_passed : std_logic := '0';
+    signal current_type         : std_logic := '0'; 
+    signal current_duration     : std_logic_vector(22 downto 0) := (others => '0');
+    signal next_duration        : std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(1,23));
+    signal possible_type        : std_logic := '0';
+    signal possible_duration    : std_logic_vector(22 downto 0) := (others => '0');
+    signal read_enable          : std_logic := '0';
     
     
     begin
@@ -95,7 +95,7 @@ architecture button_reader_architecture of button_reader is
 
                 if(possible_type = '1') then
 
-                    possible_duration <= std_logic_vector(unsigned(possible_duration) +1);
+                    possible_duration <= std_logic_vector(unsigned(possible_duration) + to_unsigned(1, 23));
 
                     if(possible_duration > short_limit_in) then
                         read_enable <= '1';
@@ -131,7 +131,7 @@ architecture button_reader_architecture of button_reader is
                         
     -- si current está en su maximo, dejamos next estatico. si no, le sumamos 1.                            
     next_duration <= current_duration when unsigned(current_duration) = unsigned(max_count) else 
-    std_logic_vector(unsigned(current_duration) + 1);
+    std_logic_vector(unsigned(current_duration) + to_unsigned(1,23));
     
     --ponemos el out los current y el read_enable.
     duration_out <= current_duration;

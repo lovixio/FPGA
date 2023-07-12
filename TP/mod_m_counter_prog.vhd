@@ -29,8 +29,8 @@ end entity;
 
 architecture mod_m_counter_prog_arch of mod_m_counter_prog is
   
-  signal r_reg  : unsigned(ceil2power(M-1)-1 downto 0);
-  signal r_next : unsigned(ceil2power(M-1)-1 downto 0);
+  signal r_reg  : unsigned(ceil2power(M-1)-1 downto 0) := to_unsigned(0, ceil2power(M-1));
+  signal r_next : unsigned(ceil2power(M-1)-1 downto 0) := to_unsigned(1, ceil2power(M-1));
 
 begin
   process(clk_i, reset_i)
