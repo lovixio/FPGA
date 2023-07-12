@@ -33,10 +33,10 @@ architecture button_reader_architecture of button_reader is
 
     signal one_decasecond_passed : std_logic := '0';
     signal current_type         : std_logic := '0'; 
-    signal current_duration     : std_logic_vector(22 downto 0) := (others => '0');
-    signal next_duration        : std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(1,23));
+    signal current_duration     : unsigned(22 downto 0) := (others => '0');
+    signal next_duration        : unsigned(22 downto 0) := to_unsigned(1,23);
     signal possible_type        : std_logic := '0';
-    signal possible_duration    : std_logic_vector(22 downto 0) := (others => '0');
+    signal possible_duration    : unsigned(22 downto 0) := (others => '0');
     signal read_enable          : std_logic := '0';
     
     
@@ -95,11 +95,11 @@ architecture button_reader_architecture of button_reader is
 
                 if(possible_type = '1') then
 
-                    possible_duration <= std_logic_vector(unsigned(possible_duration) + to_unsigned(1, 23));
+                    possible_duration <= possible_duration + 1;
 
-                    if(possible_duration > short_limit_in) then
+                    if(possible_duration > unsigned(short_limit_in)) then
                         read_enable <= '1';
-                        next_duration <= std_logic_vector(unsigned(next_duration) - unsigned(possible_duration));          
+                        next_duration <= next_duration - possible_duration;          
                     end if;
 
                 end if;       
@@ -130,11 +130,11 @@ architecture button_reader_architecture of button_reader is
         end process;
                         
     -- si current está en su maximo, dejamos next estatico. si no, le sumamos 1.                            
-    next_duration <= current_duration when unsigned(current_duration) = unsigned(max_count) else 
-    std_logic_vector(unsigned(current_duration) + to_unsigned(1,23));
+    next_duration <= current_duration when current_duration = unsigned(max_count) else 
+                        (current_duration + 1);
     
     --ponemos el out los current y el read_enable.
-    duration_out <= current_duration;
+    duration_out <= std_logic_vector(current_duration);
     type_out <= current_type;
     read_enable_out <= read_enable;
                 

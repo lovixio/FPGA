@@ -1,13 +1,13 @@
 v 4
-file . "./funciones.vhd" "fbcf4bc1bd4570a5018e07eb43689b142fea197a" "20230712004010.603":
-  package funciones at 1( 0) + 0 on 79 body;
-  package body funciones at 21( 769) + 0 on 80;
-file . "./tests/button_reader_tb.vhd" "6cac8eea383dac969d93735e5ee55585277daf78" "20230712004010.609":
-  entity button_reader_tb at 1( 0) + 0 on 85;
-  architecture testbench of button_reader_tb at 8( 120) + 0 on 86;
-file . "./button_reader.vhd" "39f3d50c9d1f8d7e37b7fa3740631847e8b80975" "20230712004010.608":
-  entity button_reader at 1( 0) + 0 on 83;
-  architecture button_reader_architecture of button_reader at 21( 570) + 0 on 84;
-file . "./mod_m_counter_prog.vhd" "ab30c01d2ae0b790f63c50154309c06b15397af4" "20230712004010.606":
-  entity mod_m_counter_prog at 11( 294) + 0 on 81;
-  architecture mod_m_counter_prog_arch of mod_m_counter_prog at 30( 799) + 0 on 82;
+file . "./funciones.vhd" "fbcf4bc1bd4570a5018e07eb43689b142fea197a" "20230712005513.106":
+  package funciones at 1( 0) + 0 on 95 body;
+  package body funciones at 21( 769) + 0 on 96;
+file . "./tests/button_reader_tb.vhd" "6cac8eea383dac969d93735e5ee55585277daf78" "20230712005513.109":
+  entity button_reader_tb at 1( 0) + 0 on 101;
+  architecture testbench of button_reader_tb at 8( 120) + 0 on 102;
+file . "./button_reader.vhd" "8196221d569bf531ddca6def527aa535da510387" "20230712005513.108":
+  entity button_reader at 1( 0) + 0 on 99;
+  architecture button_reader_architecture of button_reader at 21( 570) + 0 on 100;
+file . "./mod_m_counter_prog.vhd" "e2284fada94e536b355bf859586cfd7416bbfe87" "20230712005513.106":
+  entity mod_m_counter_prog at 11( 294) + 0 on 97;
+  architecture mod_m_counter_prog_arch of mod_m_counter_prog at 30( 799) + 0 on 98;
