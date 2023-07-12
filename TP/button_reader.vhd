@@ -13,16 +13,25 @@ entity button_reader is
         short_limit_in  : in std_logic_vector(5 downto 0);
         duration_out    : out std_logic_vector(22 downto 0);
         type_out        : out std_logic;
-        read_enable_out : out std_logic
+        read_enable_out : out std_logic;
+        count_o         : out std_logic_vector(3 downto 0)
     );
 end entity;
 
 architecture button_reader_architecture of button_reader is
-    constant max_count : std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(5000000-1, 23));
-    constant N: natural := 5000000;
-    signal one_decasecond_passed : std_logic;
-    signal count_o : std_logic_vector(22 downto 0);
+    
+    -- N = 5 000 000 para real
+    --constant N: natural := 5000000;
+    --constant max_count : std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(5000000-1, 23));
+    --signal count_o : std_logic_vector(22 downto 0);
 
+    -- N = 10 para test
+    constant N: natural := 10;
+    constant max_count : std_logic_vector(3 downto 0) := std_logic_vector(to_unsigned(10-1, 4));
+    --signal count_o : std_logic_vector(3 downto 0);
+
+
+    signal one_decasecond_passed : std_logic;
     signal current_type : std_logic; 
     signal current_duration : std_logic_vector(22 downto 0);
     signal next_duration : std_logic_vector(22 downto 0);
