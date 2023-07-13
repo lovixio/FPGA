@@ -99,7 +99,7 @@ architecture button_reader_architecture of button_reader is
 
                     if(possible_duration > unsigned(short_limit_in)) then
                         read_enable <= '1';
-                        next_duration <= next_duration - possible_duration;          
+                        current_duration <= current_duration - possible_duration;          
                     end if;
 
                 end if;       

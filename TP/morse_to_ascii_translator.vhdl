@@ -10,12 +10,13 @@ entity morse_to_ascii_translator is
         end_of_word_in          : in std_logic;
         morse_letter_in         : in std_logic_vector( 10 downto 0);
         ascii_char_ready_out    : out std_logic;
-        ascii_word_buffer_out   : out std_logic_vector( 1024 downto 0); -- guardo hasa 128 letras si son cosas de 8 bits?
+        ascii_char_out          : out std_logic_vector(7 downto 0);
     );
 end entity;
 
 architecture morse_to_ascii_translator_architecture of morse_to_ascii_translator is
     signal ascii_char       : unsigned(7 downto 0)  := (others => '0');
+    signal write_end_of_word: std_logic             := '0';
 
     begin
         process(clock_in, reset_in) begin
@@ -25,7 +26,10 @@ architecture morse_to_ascii_translator_architecture of morse_to_ascii_translator
             end if;
 
             if rising_edge(clock_in) then
-                if (morse_ready_in = '1') then
+                if (write_end_of_word = '0') then
+                    ascii_char <= 32;
+                    write_end_of_word = '0';
+                elsif (morse_ready_in = '1') then
                     --leo que tiene el morse_letter_in
                     --lo traduzco
                     case morse_letter_in is
@@ -104,30 +108,12 @@ architecture morse_to_ascii_translator_architecture of morse_to_ascii_translator
                     end case;
                     --si es end_of_word, agrego el char y pongo como nuevo char el " "
                     if (end_of_word_in = '1') then
-                        ascii_word_buffer_out <= shift_left(ascii_word_buffer_out, 8);
-                        ascii_word_buffer_out(0) <= ascii_char(0);
-                        ascii_word_buffer_out(1) <= ascii_char(1);
-                        ascii_word_buffer_out(2) <= ascii_char(2);
-                        ascii_word_buffer_out(3) <= ascii_char(3);
-                        ascii_word_buffer_out(4) <= ascii_char(4);
-                        ascii_word_buffer_out(5) <= ascii_char(5);
-                        ascii_word_buffer_out(6) <= ascii_char(6);
-                        ascii_word_buffer_out(7) <= ascii_char(7);
-                        ascii_char <= 32;
+                        write_end_of_word <= '1';
                     end if;
-                    --pongo el char en el buffer
-                    ascii_word_buffer_out <= shift_left(ascii_word_buffer_out, 8);
-                    ascii_word_buffer_out(0) <= ascii_char(0);
-                    ascii_word_buffer_out(1) <= ascii_char(1);
-                    ascii_word_buffer_out(2) <= ascii_char(2);
-                    ascii_word_buffer_out(3) <= ascii_char(3);
-                    ascii_word_buffer_out(4) <= ascii_char(4);
-                    ascii_word_buffer_out(5) <= ascii_char(5);
-                    ascii_word_buffer_out(6) <= ascii_char(6);
-                    ascii_word_buffer_out(7) <= ascii_char(7);
                 
                 end if;
                 --cambiamos bit de ready
+                ascii_char_out <= ascii_char;
                 ascii_char_ready_out <= morse_ready_in;
             end if;
         end process;
