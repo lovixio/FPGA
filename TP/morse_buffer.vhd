@@ -8,7 +8,7 @@ entity morse_buffer is
         clock_in : in std_logic;   
         reset_in  : in std_logic;
         read_enable_in : in std_logic;
-        morse_in : out std_logic_vector(1 downto 0); 
+        morse_in : in std_logic_vector(1 downto 0); 
         buffer_out : out std_logic_vector(10 downto 0);
         char_ready_out : out std_logic;
         end_of_word_out : out std_logic;

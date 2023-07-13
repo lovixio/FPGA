@@ -129,13 +129,13 @@ architecture button_reader_architecture of button_reader is
             end if;
         end process;
                         
-    -- si current está en su maximo, dejamos next estatico. si no, le sumamos 1.                            
-    next_duration <= current_duration when current_duration = unsigned(max_count) else 
-                        (current_duration + 1);
-    
-    --ponemos el out los current y el read_enable.
-    duration_out <= std_logic_vector(current_duration);
-    type_out <= current_type;
-    read_enable_out <= read_enable;
+        -- si current está en su maximo, dejamos next estatico. si no, le sumamos 1.                            
+        next_duration <= current_duration when current_duration = unsigned(max_count) else 
+                            (current_duration + 1);
+        
+        --ponemos el out los current y el read_enable.
+        duration_out <= std_logic_vector(current_duration);
+        type_out <= current_type;
+        read_enable_out <= read_enable;
                 
 end architecture;
