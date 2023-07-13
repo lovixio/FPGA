@@ -8,7 +8,7 @@ entity morse_buffer is
         reset_in  : in std_logic;
         read_enable_in : in std_logic;
         morse_in : in std_logic_vector(1 downto 0); 
-        buffer_out : out std_logic_vector(10 downto 0);
+        buffer_out : out std_logic_vector(9 downto 0);
         char_ready_out : out std_logic;
         end_of_word_out : out std_logic
     );
@@ -16,7 +16,7 @@ end entity;
 
 architecture morse_buffer_architecture of morse_buffer is 
 
-signal current_buffer, next_buffer : std_logic_vector(10 downto 0);
+signal current_buffer, next_buffer : std_logic_vector(9 downto 0);
 signal morse_counter, next_morse_counter : std_logic_vector(4 downto 0);
 signal char_ready : std_logic := '0';
 signal end_of_word : std_logic := '0';

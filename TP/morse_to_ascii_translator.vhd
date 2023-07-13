@@ -46,7 +46,7 @@ architecture morse_to_ascii_translator_architecture of morse_to_ascii_translator
                             ascii_char <= to_unsigned(69, 8); --E
                         when "0010101110" =>
                             ascii_char <= to_unsigned(70, 8); --F
-                        when "0000111010" =>
+                        when "0000111110" =>
                             ascii_char <= to_unsigned(71, 8); --G
                         when "0010101010" =>
                             ascii_char <= to_unsigned(72, 8); --H
