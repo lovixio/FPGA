@@ -20,7 +20,7 @@ end entity;
 architecture signal_to_morse_architecture of signal_to_morse is
     
     signal morse : std_logic_vector(1 downto 0) := (others => '0');
-    signal silence_short_limit : unsigned(5 downto 0) := unsigned(short_limit_in)*3;
+    signal silence_short_limit : unsigned(5 downto 0) := unsigned(short_limit_in)*3; --marca error de bound check, revisar
     signal silence_long_limit : unsigned(5 downto 0) := unsigned(short_limit_in)*7;
     signal morse_ready : std_logic := '0';
 

@@ -15,7 +15,7 @@ architecture testbench of signal_to_morse_tb is
     signal short_limit : std_logic_vector(5 downto 0) := (others => '0');
     signal long_limit : std_logic_vector(5 downto 0) := (others => '0');
     signal morse_char : std_logic_vector(1 downto 0) := (others => '0'); -- el bit mas significativo indica el tipo, el otro indica si es corto o largo
-    
+    signal morse_ready : std_logic := '0';
 
     component signal_to_morse is
         port(        
@@ -26,7 +26,8 @@ architecture testbench of signal_to_morse_tb is
             duration_in  : in std_logic_vector(22 downto 0);
             short_limit_in : in std_logic_vector(5 downto 0);
             long_limit_in : in std_logic_vector(5 downto 0);
-            morse_out : out std_logic_vector(1 downto 0)
+            morse_out : out std_logic_vector(1 downto 0);
+            morse_ready_out : out std_logic
         );
     end component;
 
@@ -40,7 +41,8 @@ begin
             duration_in => signal_duration,
             short_limit_in => short_limit,
             long_limit_in =>  long_limit,
-            morse_out =>  morse_char
+            morse_out =>  morse_char,
+            morse_ready_out => morse_ready
             );
 
     clk_process: process  -- Generador de reloj

@@ -23,7 +23,8 @@ architecture button_reader_architecture of button_reader is
     -- N = 5 000 000 para real
     --constant N: natural := 5000000;
     --constant max_count : std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(5000000-1, 23));
-    --signal count_o : std_logic_vector(22 downto 0);
+    constant max_duration : std_logic_vector(22 downto 0) := std_logic_vector(to_unsigned(600, 23));
+
 
     -- N = 10 para test
     constant N: natural := 10;
@@ -130,8 +131,7 @@ architecture button_reader_architecture of button_reader is
         end process;
                         
         -- si current está en su maximo, dejamos next estatico. si no, le sumamos 1.                            
-        next_duration <= current_duration when current_duration = unsigned(max_count) else 
-                            (current_duration + 1);
+        next_duration <= current_duration when current_duration = unsigned(max_duration) else (current_duration + 1);
         
         --ponemos el out los current y el read_enable.
         duration_out <= std_logic_vector(current_duration);
